@@ -1,0 +1,53 @@
+name: Upload ac97
+
+
+on:
+  workflow_dispatch: 
+  
+  
+  
+permissions:
+  contents: write
+
+
+jobs:
+
+
+  upload:
+
+
+    runs-on: ubuntu-latest
+
+
+    steps:
+    - uses: actions/checkout@v5
+    
+    - name: upload
+      shell: bash
+      env:
+        ACCESS: ${{ secrets.ACCESS }}
+        SECRET: ${{ secrets.SECRET }}
+        BUCKET: office97sr1-winworldpc
+      run: |
+           sudo apt install mkisofs genisoimage xorriso -y
+           wget https://files.emulace.cz/sbpci_98se.exe
+           wget https://files.emulace.cz/ac97_362.zip
+           mkdir ac97_362
+           unzip ac97_362.zip -d ac97_362
+           xorriso -as mkisofs -iso-level 3 -J -joliet-long -R -allow-lowercase -V "SBPCI_98SE" -o sbpci_98se.iso sbpci_98se.exe
+           xorriso -as mkisofs -iso-level 3 -J -joliet-long -R -allow-lowercase -V "AC97_362" -o ac97_362.iso ac97_362
+           sha256sum ac97_362.iso \
+           sbpci_98se.iso
+           
+           for FILE in "ac97_362.iso" "sbpci_98se.iso"
+           do
+             curl -X PUT \
+               --upload-file "$FILE" \
+               -H "User-Agent: curl" \
+               -H "authorization: LOW $ACCESS:$SECRET" \
+               "https://s3.us.archive.org/ac97-sb128/$FILE"
+
+            done
+env:
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      
