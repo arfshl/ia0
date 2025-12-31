@@ -1,0 +1,57 @@
+name: Upload operawin7
+
+
+on:
+  workflow_dispatch: 
+  
+  
+  
+permissions:
+  contents: write
+
+
+jobs:
+
+
+  upload:
+
+
+    runs-on: ubuntu-latest
+
+
+    steps:
+    - uses: actions/checkout@v5
+    
+    - name: upload
+      shell: bash
+      env:
+        ACCESS: ${{ secrets.ACCESS }}
+        SECRET: ${{ secrets.SECRET }}
+        BUCKET: office97sr1-winworldpc
+      run: |
+           sudo apt install mkisofs genisoimage xorriso -y
+           wget https://download5.operacdn.com/ftp/pub/opera/desktop/95.0.4635.90/win/Opera_95.0.4635.90_Setup.exe
+           wget https://download5.operacdn.com/ftp/pub/opera/desktop/95.0.4635.90/win/Opera_95.0.4635.90_Setup_x64.exe
+           xorriso -as mkisofs -iso-level 3 -J -joliet-long -R -allow-lowercase -V "OPERA_WIN7_95_X86" -o Opera_95.0.4635.90_Setup.iso Opera_95.0.4635.90_Setup.exe
+           xorriso -as mkisofs -iso-level 3 -J -joliet-long -R -allow-lowercase -V "OPERA_WIN7_95_X64" -o Opera_95.0.4635.90_Setup_x64.iso Opera_95.0.4635.90_Setup_x64.exe
+           sha256sum Opera_95.0.4635.90_Setup.iso \
+           Opera_95.0.4635.90_Setup.exe \
+           Opera_95.0.4635.90_Setup_x64.iso \
+           Opera_95.0.4635.90_Setup_x64.exe
+           
+           for FILE in "Opera_95.0.4635.90_Setup.iso" "Opera_95.0.4635.90_Setup.exe" "Opera_95.0.4635.90_Setup_x64.iso" "Opera_95.0.4635.90_Setup_x64.exe"
+           do
+             curl -X PUT \
+               --upload-file "$FILE" \
+               -H "x-amz-auto-make-bucket:1" \
+               -H "x-archive-meta-mediatype:software" \
+               -H "x-archive-meta-title: Opera 95 for Windows 7/8/8.1" \
+               -H "x-archive-meta-description: Opera 95 for Windows 7/8/8.1"  \
+               -H "User-Agent: curl" \
+               -H "authorization: LOW $ACCESS:$SECRET" \
+               "https://s3.us.archive.org/opera_95_win7/$FILE"
+
+            done
+env:
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      

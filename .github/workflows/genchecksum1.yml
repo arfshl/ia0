@@ -1,0 +1,61 @@
+name: genchecksum1
+
+
+on:
+  workflow_dispatch: 
+  
+  
+  
+permissions:
+  contents: write
+
+
+jobs:
+
+
+  upload:
+
+
+    runs-on: ubuntu-latest
+
+
+    steps:
+    - uses: actions/checkout@v5
+    
+    - name: upload
+      shell: bash
+      env:
+        ACCESS: ${{ secrets.ACCESS }}
+        SECRET: ${{ secrets.SECRET }}
+      run: |
+        wget https://archive.org/download/ac97-sb128/ac97_362.zip
+        wget https://archive.org/download/ac97-sb128/sbpci_98se.exe
+        wget https://archive.org/download/windows2000-kb835732/windows2000-kb835732-x86-enu_7b7d1dffd9347af2c166bfcecc4782c.exe.iso
+        wget https://archive.org/download/windows2000-kb835732/windows2000-kb835732-x86-enu_7b7d1dffd9347af2c166bfcecc4782c.exe
+        wget https://archive.org/download/win7-KB3033929-KB4490628/Windows6.1-KB3033929-KB4490628-x64.iso
+        wget https://archive.org/download/win7-KB3033929-KB4490628/Windows6.1-KB3033929-KB4490628-x86.iso
+        wget https://archive.org/download/win7-KB3033929-KB4490628/Windows6.1-KB3033929-x64.msu
+        wget https://archive.org/download/win7-KB3033929-KB4490628/windows6.1-kb3033929-x86_927e018113fe51250c57029635d46b89bf235920.msu
+        wget https://archive.org/download/win7-KB3033929-KB4490628/windows6.1-kb4490628-x64_d3de52d6987f7c8bdc2c015dca69eac96047c76e.msu
+        wget https://archive.org/download/mozilla-firefox-52.9.0esr/Firefox%20Setup%2052.9.0esr.exe.iso
+        wget https://archive.org/download/mozilla-firefox-52.9.0esr/Firefox%20Setup%2052.9.0esr.exe
+        wget https://archive.org/download/windows_xp_starter_id/Windows_XP_Starter_Indonesia_%28V2ACOEM_ID%29.iso
+        wget https://archive.org/download/winxpstartermalaysia/V2ACOEM_EN-MY.iso
+        
+        sha256sum \
+        ac97_362.zip \
+        sbpci_98se.exe \
+        windows2000-kb835732-x86-enu_7b7d1dffd9347af2c166bfcecc4782c.exe.iso \
+        windows2000-kb835732-x86-enu_7b7d1dffd9347af2c166bfcecc4782c.exe \
+        Windows6.1-KB3033929-KB4490628-x64.iso \
+        Windows6.1-KB3033929-KB4490628-x86.iso \
+        Windows6.1-KB3033929-x64.msu \
+        windows6.1-kb3033929-x86_927e018113fe51250c57029635d46b89bf235920.msu \
+        windows6.1-kb4490628-x64_d3de52d6987f7c8bdc2c015dca69eac96047c76e.msu \
+        "Firefox Setup 52.9.0esr.exe.iso" \
+        "Firefox Setup 52.9.0esr.exe" \
+        "Windows_XP_Starter_Indonesia_(V2ACOEM_ID).iso" \
+        "V2ACOEM_EN-MY.iso"
+env:
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      

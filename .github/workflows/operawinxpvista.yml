@@ -1,0 +1,52 @@
+name: Upload operawinxp
+
+
+on:
+  workflow_dispatch: 
+  
+  
+  
+permissions:
+  contents: write
+
+
+jobs:
+
+
+  upload:
+
+
+    runs-on: ubuntu-latest
+
+
+    steps:
+    - uses: actions/checkout@v5
+    
+    - name: upload
+      shell: bash
+      env:
+        ACCESS: ${{ secrets.ACCESS }}
+        SECRET: ${{ secrets.SECRET }}
+        BUCKET: office97sr1-winworldpc
+      run: |
+           sudo apt install mkisofs genisoimage xorriso -y
+           wget https://download5.operacdn.com/ftp/pub/opera-winxpvista/36.0.2130.80/win/Opera_winxpvista_36.0.2130.80_Setup.exe
+           xorriso -as mkisofs -iso-level 3 -J -joliet-long -R -allow-lowercase -V "OPERA_WINXPVISTA_36" -o Opera_winxpvista_36.0.2130.80_Setup.iso Opera_winxpvista_36.0.2130.80_Setup.exe
+           sha256sum Opera_winxpvista_36.0.2130.80_Setup.exe \
+           Opera_winxpvista_36.0.2130.80_Setup.iso
+           for FILE in "Opera_winxpvista_36.0.2130.80_Setup.exe" "Opera_winxpvista_36.0.2130.80_Setup.iso"
+           do
+             curl -X PUT \
+               --upload-file "$FILE" \
+               -H "x-amz-auto-make-bucket:1" \
+               -H "x-archive-meta-mediatype:software" \
+               -H "x-archive-meta-title: Opera 36 for Windows XP/Vista" \
+               -H "x-archive-meta-description: Opera 36 for Windows XP/Vista"  \
+               -H "User-Agent: curl" \
+               -H "authorization: LOW $ACCESS:$SECRET" \
+               "https://s3.us.archive.org/opera_36_winxpvista/$FILE"
+
+            done
+env:
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      

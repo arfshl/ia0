@@ -1,0 +1,44 @@
+name: Upload officexp
+
+
+on:
+  workflow_dispatch: 
+  
+  
+  
+permissions:
+  contents: write
+
+
+jobs:
+
+
+  upload:
+
+
+    runs-on: ubuntu-latest
+
+
+    steps:
+    - uses: actions/checkout@v5
+    
+    - name: upload
+      shell: bash
+      env:
+        ACCESS: ${{ secrets.ACCESS }}
+        SECRET: ${{ secrets.SECRET }}
+      run: |
+        wget -cO "en_office_xp_pro.iso" "https://delivery.activated.win/dbmassgrave/en_office_xp_pro.iso?t=AU5dglB7HbqtcdYXagt2dxB24Efa7wAl&P1=1764215975&P2=601&P3=2&P4=XXmhaKqDL%2FLY%2Bibq4dRi10v2fd532u7LFSQM0FiSp%2Bc%3D"
+        sha512sum "en_office_xp_pro.iso"
+        curl -X PUT \
+               --upload-file "en_office_xp_pro.iso" \
+               -H "x-amz-auto-make-bucket:1" \
+               -H "x-archive-meta-mediatype:software" \
+               -H "x-archive-meta-title: Microsoft Office XP Professional with Frontpage" \
+               -H "x-archive-meta-description: Microsoft Office XP Professional with Frontpage" \
+               -H "User-Agent: curl" \
+               -H "authorization: LOW $ACCESS:$SECRET" \
+               "https://s3.us.archive.org/officexpprowfp/en_office_xp_pro.iso"
+env:
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      
