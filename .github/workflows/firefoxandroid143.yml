@@ -1,0 +1,47 @@
+name: Firefox 143 for Android 
+
+
+on:
+  workflow_dispatch: 
+  
+  
+  
+permissions:
+  contents: write
+
+
+jobs:
+
+
+  upload:
+
+
+    runs-on: ubuntu-latest
+
+
+    steps:
+    - uses: actions/checkout@v5
+    
+    - name: upload
+      shell: bash
+      env:
+        ACCESS: ${{ secrets.ACCESS }}
+        SECRET: ${{ secrets.SECRET }}
+      run: |
+        curl -L -o fenix-143.0.4.multi.android-universal.apk "https://ftp.mozilla.org/pub/fenix/releases/143.0.4/android/fenix-143.0.4-android/fenix-143.0.4.multi.android-universal.apk"
+        sha256sum fenix-143.0.4.multi.android-universal.apk
+        for FILE in "fenix-143.0.4.multi.android-universal.apk"
+        do
+        curl -X PUT \
+               --upload-file "$FILE" \
+               -H "x-amz-auto-make-bucket:1" \
+               -H "x-archive-meta-mediatype:software" \
+               -H "x-archive-meta-title: Firefox 143.0.4 for Android 5.0+" \
+               -H "x-archive-meta-description: Firefox 143.0.4 for Android 5.0+" \
+               -H "User-Agent: curl" \
+               -H "authorization: LOW $ACCESS:$SECRET" \
+               "https://s3.us.archive.org/fenix-143.0.4-multi-android/$FILE"
+        done
+env:
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      
