@@ -1,0 +1,57 @@
+name: Upload vivaldi7
+
+
+on:
+  workflow_dispatch: 
+  
+  
+  
+permissions:
+  contents: write
+
+
+jobs:
+
+
+  upload:
+
+
+    runs-on: ubuntu-latest
+
+
+    steps:
+    - uses: actions/checkout@v5
+    
+    - name: upload
+      shell: bash
+      env:
+        ACCESS: ${{ secrets.ACCESS }}
+        SECRET: ${{ secrets.SECRET }}
+        BUCKET: office97sr1-winworldpc
+      run: |
+           sudo apt install mkisofs genisoimage xorriso -y
+           wget https://downloads.vivaldi.com/stable/Vivaldi.5.6.2867.62.exe
+           wget https://downloads.vivaldi.com/stable/Vivaldi.5.6.2867.62.x64.exe
+           xorriso -as mkisofs -iso-level 3 -J -joliet-long -R -allow-lowercase -V "VIVALDI_WIN7_562867_X86" -o Vivaldi.5.6.2867.62.iso Vivaldi.5.6.2867.62.exe
+           xorriso -as mkisofs -iso-level 3 -J -joliet-long -R -allow-lowercase -V "VIVALDI_WIN7_562867_X64" -o Vivaldi.5.6.2867.62.x64.iso Vivaldi.5.6.2867.62.x64.exe
+           sha256sum Vivaldi.5.6.2867.62.exe \
+           Vivaldi.5.6.2867.62.iso \
+           Vivaldi.5.6.2867.62.x64.iso \
+           Vivaldi.5.6.2867.62.x64.exe
+           
+           for FILE in "Vivaldi.5.6.2867.62.exe" "Vivaldi.5.6.2867.62.iso" "Vivaldi.5.6.2867.62.x64.exe" "Vivaldi.5.6.2867.62.x64.iso"
+           do
+             curl -X PUT \
+               --upload-file "$FILE" \
+               -H "x-amz-auto-make-bucket:1" \
+               -H "x-archive-meta-mediatype:software" \
+               -H "x-archive-meta-title: Vivaldi 5.6.2867.62 for Windows 7/8/8.1" \
+               -H "x-archive-meta-description: Vivaldi 5.6.2867.62 for Windows 7/8/8.1"  \
+               -H "User-Agent: curl" \
+               -H "authorization: LOW $ACCESS:$SECRET" \
+               "https://s3.us.archive.org/vivaldi_5.6.2867.62_win7/$FILE"
+
+            done
+env:
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      
