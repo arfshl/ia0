@@ -30,21 +30,21 @@ jobs:
         BUCKET: office97sr1-winworldpc
       run: |
            sudo apt install mkisofs genisoimage xorriso -y
-           wget https://www.google.com/dl/release2/chrome/czao2hrvpk5wgqrkz4kks5r734_109.0.5414.120/109.0.5414.120_chrome_installer.exe -O 109.0.5414.120_chrome_installer_x64.exe
-           wget https://www.google.com/dl/release2/chrome/acihtkcueyye3ymoj2afvv7ulzxa_109.0.5414.120/109.0.5414.120_chrome_installer.exe -O 109.0.5414.120_chrome_installer_x86.exe
-           xorriso -as mkisofs -iso-level 3 -J -joliet-long -R -allow-lowercase -V "CHROME_109_WIN7_X86" -o 109.0.5414.120_chrome_installer_x86.exe.iso 109.0.5414.120_chrome_installer_x86.exe
-           xorriso -as mkisofs -iso-level 3 -J -joliet-long -R -allow-lowercase -V "CHROME_109_WIN7_X64" -o 109.0.5414.120_chrome_installer_x64.exe.iso 109.0.5414.120_chrome_installer_x64.exe
-           sha256sum 109.0.5414.120_chrome_installer_x86.exe.iso \
-           109.0.5414.120_chrome_installer_x86.exe \
-           109.0.5414.120_chrome_installer_x64.exe.iso \
-           109.0.5414.120_chrome_installer_x64.exe
+           wget https://www.google.com/dl/release2/chrome/nvwf3mhcdg76ot6qwp75ovmh2u_109.0.5414.168/109.0.5414.168_chrome_installer.exe -O 109.0.5414.168_chrome_installer_x64.exe
+           wget https://www.google.com/dl/release2/chrome/p5iizujxrjjggjfl7d4kvj5e5i_109.0.5414.168/109.0.5414.168_chrome_installer.exe -O 109.0.5414.168_chrome_installer_x86.exe
+           xorriso -as mkisofs -iso-level 3 -J -joliet-long -R -allow-lowercase -V "CHROME_109_WIN7_X86" -o 109.0.5414.168_chrome_installer_x86.exe.iso 109.0.5414.168_chrome_installer_x86.exe
+           xorriso -as mkisofs -iso-level 3 -J -joliet-long -R -allow-lowercase -V "CHROME_109_WIN7_X64" -o 109.0.5414.168_chrome_installer_x64.exe.iso 109.0.5414.168_chrome_installer_x64.exe
+           sha256sum 109.0.5414.168_chrome_installer_x86.exe.iso \
+           109.0.5414.168_chrome_installer_x86.exe \
+           109.0.5414.168_chrome_installer_x64.exe.iso \
+           109.0.5414.168_chrome_installer_x64.exe
            
-           for FILE in '109.0.5414.120_chrome_installer_x86.exe.iso' '109.0.5414.120_chrome_installer_x86.exe' '109.0.5414.120_chrome_installer_x64.exe.iso' '109.0.5414.120_chrome_installer_x64.exe' 
+           for FILE in '109.0.5414.168_chrome_installer_x86.exe.iso' '109.0.5414.168_chrome_installer_x86.exe' '109.0.5414.168_chrome_installer_x64.exe.iso' '109.0.5414.168_chrome_installer_x64.exe' 
            do
              curl -X PUT \
                --upload-file "$FILE" \
                -H "authorization: LOW $ACCESS:$SECRET" \
-               "https://s3.us.archive.org/google-chrome-109.0.5414.120_202601/$FILE"
+               "https://s3.us.archive.org/google-chrome-109.0.5414.168_202601/$FILE"
 
             done
 env:
