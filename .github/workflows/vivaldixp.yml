@@ -1,4 +1,4 @@
-name: Upload operawin7
+name: Upload vivaldixp
 
 
 on:
@@ -45,11 +45,11 @@ jobs:
                --upload-file "$FILE" \
                -H "x-amz-auto-make-bucket:1" \
                -H "x-archive-meta-mediatype:software" \
-               -H "x-archive-meta-title: Vivaldi " \
-               -H "x-archive-meta-description: Opera 95 for Windows 7/8/8.1"  \
+               -H "x-archive-meta-title: Vivaldi 1.0.435 for Windows XP/Vista" \
+               -H "x-archive-meta-description: Vivaldi 1.0.435 for Windows XP/Vista"  \
                -H "User-Agent: curl" \
                -H "authorization: LOW $ACCESS:$SECRET" \
-               "https://s3.us.archive.org/opera_95_win7/$FILE"
+               "https://s3.us.archive.org/vivaldi_1.0.435_winxp/$FILE"
 
             done
 env:
