@@ -44,7 +44,7 @@ jobs:
              curl -X PUT \
                --upload-file "$FILE" \
                -H "authorization: LOW $ACCESS:$SECRET" \
-               "https://s3.us.archive.org/google-chrome-109.0.5414.168_202601/$FILE"
+               "https://s3.us.archive.org/google-chrome-109.0.5414.120_202601/$FILE"
 
             done
 env:
