@@ -1,0 +1,49 @@
+name: Upload debianlenny
+
+
+on:
+  workflow_dispatch: 
+  
+  
+  
+permissions:
+  contents: write
+
+
+jobs:
+
+
+  upload:
+
+
+    runs-on: ubuntu-latest
+
+
+    steps:
+    - uses: actions/checkout@v5
+    
+    - name: upload
+      shell: bash
+      env:
+        ACCESS: ${{ secrets.ACCESS }}
+        SECRET: ${{ secrets.SECRET }}
+      run: |
+        curl -C - -L -o "debian-500-amd64-netinst.iso" "https://cdimage.debian.org/mirror/cdimage/archive/5.0.0/amd64/iso-cd/debian-500-amd64-netinst.iso"
+        curl -C - -L -o "debian-live-500-amd64-gnome-desktop.iso" "https://cdimage.debian.org/mirror/cdimage/archive/5.0.0-live/amd64/iso-cd/debian-live-500-amd64-gnome-desktop.iso"
+        sha256sum "debian-500-amd64-netinst.iso"
+        sha256sum "debian-live-500-amd64-gnome-desktop.iso"
+        for FILE in "debian-500-amd64-netinst.iso" "debian-live-500-amd64-gnome-desktop.iso"
+        do
+        curl -X PUT \
+               --upload-file "$FILE" \
+               -H "x-amz-auto-make-bucket:1" \
+               -H "x-archive-meta-mediatype:software" \
+               -H "x-archive-meta-title: Debian 5.0 (Lenny) amd64" \
+               -H "x-archive-meta-description: Debian 5.0 (Lenny) amd64 netinstall and GNOME LiveCD" \
+               -H "User-Agent: curl" \
+               -H "authorization: LOW $ACCESS:$SECRET" \
+               "https://s3.us.archive.org/debian-5-lenny-amd64/$FILE"
+        done
+env:
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      
