@@ -3,10 +3,10 @@ updates:
   - package-ecosystem: "github-actions"
     directory: "/"
     schedule:
-      interval: "weekly" # Checks every week
+      interval: "weekly" 
     reviewers:
       - "arfshl"
     groups:
       github-actions-updates:
         patterns:
-          - "*" # Groups all action updates into one PR
+          - "*" 
