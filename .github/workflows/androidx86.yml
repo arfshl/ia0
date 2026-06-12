@@ -1,0 +1,44 @@
+name: Upload androidx86
+
+on:
+  workflow_dispatch: 
+  
+permissions:
+  contents: write
+
+
+jobs:
+
+
+  upload:
+
+
+    runs-on: ubuntu-latest
+
+
+    steps:
+    - uses: actions/checkout@v6
+    
+    - name: upload
+      shell: bash
+      env:
+        ACCESS: ${{ secrets.ACCESS }}
+        SECRET: ${{ secrets.SECRET }}
+      run: |
+        curl -C - -L -o "android-x86_64-6.0-r3.iso" "https://mirrors.dotsrc.org/osdn/android-x86/65890/android-x86_64-6.0-r3.iso"
+        sha256sum "android-x86_64-6.0-r3.iso"
+        for FILE in "android-x86_64-6.0-r3.iso"
+        do
+        curl -X PUT \
+               --upload-file "$FILE" \
+               -H "x-amz-auto-make-bucket:1" \
+               -H "x-archive-meta-mediatype:software" \
+               -H "x-archive-meta-title: Android-x86" \
+               -H "x-archive-meta-description: Archived Android-x86 ISO image" \
+               -H "User-Agent: curl" \
+               -H "authorization: LOW $ACCESS:$SECRET" \
+               "https://s3.us.archive.org/android-x86-20250612/$FILE"
+        done
+env:
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      
