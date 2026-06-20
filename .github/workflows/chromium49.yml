@@ -31,8 +31,8 @@ jobs:
            sudo apt install mkisofs genisoimage xorriso -y
            wget https://github.com/arfshl/chromium-build-repolist/releases/download/chromium-49.0.2623.112/chromium_win32_49.0.2623.112_r403382_sync.exe
            wget https://github.com/arfshl/chromium-build-repolist/releases/download/chromium-49.0.2623.112/chromium_win32_49.0.2623.112_r403382_sync.zip
-           xorriso -as mkisofs -iso-level 3 -J -joliet-long -R -allow-lowercase -V "CHROMIUM_49_INSTALLER" -o chromium_win32_49.0.2623.112_r403382_sync.exe chromium_win32_49.0.2623.112_r403382_sync.exe.iso
-           xorriso -as mkisofs -iso-level 3 -J -joliet-long -R -allow-lowercase -V "CHROMIUM_49_ARCHIVE" -o chromium_win32_49.0.2623.112_r403382_sync.zip chromium_win32_49.0.2623.112_r403382_sync.zip.iso
+           xorriso -as mkisofs -iso-level 3 -J -joliet-long -R -allow-lowercase -V "CHROMIUM_49_INSTALLER" -o chromium_win32_49.0.2623.112_r403382_sync.exe.iso chromium_win32_49.0.2623.112_r403382_sync.exe
+           xorriso -as mkisofs -iso-level 3 -J -joliet-long -R -allow-lowercase -V "CHROMIUM_49_ARCHIVE" -o chromium_win32_49.0.2623.112_r403382_sync.zip.iso chromium_win32_49.0.2623.112_r403382_sync.zip
            sha256sum chromium_win32_49.0.2623.112_r403382_sync.exe \
            chromium_win32_49.0.2623.112_r403382_sync.exe.iso \
            chromium_win32_49.0.2623.112_r403382_sync.zip \
