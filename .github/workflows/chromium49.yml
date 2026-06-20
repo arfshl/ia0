@@ -42,6 +42,10 @@ jobs:
            do
              curl -X PUT \
                --upload-file "$FILE" \
+               -H "x-amz-auto-make-bucket:1" \
+               -H "x-archive-meta-mediatype:software" \
+               -H "x-archive-meta-title: Chromium 49.0.2623.112 for Windows XP/Vista" \
+               -H "x-archive-meta-description: Chromium 49.0.2623.112 for Windows XP/Vista" \
                -H "authorization: LOW $ACCESS:$SECRET" \
                "https://s3.us.archive.org/chromium-49.0.2623.112_r403382_sync/$FILE"
 
