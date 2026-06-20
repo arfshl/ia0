@@ -1,0 +1,51 @@
+name: Upload chromium49
+
+
+on:
+  workflow_dispatch: 
+  
+  
+  
+permissions:
+  contents: write
+
+
+jobs:
+
+
+  upload:
+
+
+    runs-on: ubuntu-latest
+
+
+    steps:
+    - uses: actions/checkout@v6
+    
+    - name: upload
+      shell: bash
+      env:
+        ACCESS: ${{ secrets.ACCESS }}
+        SECRET: ${{ secrets.SECRET }}
+      run: |
+           sudo apt install mkisofs genisoimage xorriso -y
+           wget https://chromium.woolyss.com/f/chromium_win32_49.0.2623.112_r403382_sync.exe
+           wget https://chromium.woolyss.com/f/chromium_win32_49.0.2623.112_r403382_sync.zip
+           xorriso -as mkisofs -iso-level 3 -J -joliet-long -R -allow-lowercase -V "CHROMIUM_49_INSTALLER" -o chromium_win32_49.0.2623.112_r403382_sync.exe chromium_win32_49.0.2623.112_r403382_sync.exe.iso
+           xorriso -as mkisofs -iso-level 3 -J -joliet-long -R -allow-lowercase -V "CHROMIUM_49_ARCHIVE" -o chromium_win32_49.0.2623.112_r403382_sync.zip chromium_win32_49.0.2623.112_r403382_sync.zip.iso
+           sha256sum chromium_win32_49.0.2623.112_r403382_sync.exe \
+           chromium_win32_49.0.2623.112_r403382_sync.exe.iso \
+           chromium_win32_49.0.2623.112_r403382_sync.zip \
+           chromium_win32_49.0.2623.112_r403382_sync.zip.iso
+           
+           for FILE in 'chromium_win32_49.0.2623.112_r403382_sync.exe' 'chromium_win32_49.0.2623.112_r403382_sync.exe.iso' 'chromium_win32_49.0.2623.112_r403382_sync.zip' 'chromium_win32_49.0.2623.112_r403382_sync.zip.iso'
+           do
+             curl -X PUT \
+               --upload-file "$FILE" \
+               -H "authorization: LOW $ACCESS:$SECRET" \
+               "https://s3.us.archive.org/chromium-49.0.2623.112_r403382_sync/$FILE"
+
+            done
+env:
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      
